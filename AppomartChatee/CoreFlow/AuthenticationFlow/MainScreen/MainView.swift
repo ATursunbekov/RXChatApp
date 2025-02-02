@@ -17,6 +17,14 @@ class MainView: UIView {
         return tableView
     }()
     
+    lazy var emptyLabel: UILabel = {
+        let label = UILabel()
+        label.text = "No Chats"
+        label.font = .systemFont(ofSize: 24, weight: .bold)
+        label.textColor = .black
+        return label
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -28,10 +36,16 @@ class MainView: UIView {
     
     private func setupUI() {
         backgroundColor = .white
-        addSubview(tableView)
         
+        addSubview(tableView)
         tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+        
+        addSubview(emptyLabel)
+        emptyLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+        emptyLabel.isHidden = true
     }
 }

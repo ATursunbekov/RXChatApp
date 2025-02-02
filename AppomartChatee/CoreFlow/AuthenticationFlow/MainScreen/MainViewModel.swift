@@ -23,41 +23,41 @@ class MainViewModel {
             errorMessage.onNext("User not authenticated.")
             return
         }
-
+        
         db.collection("chats")
             .whereField("participants", arrayContains: currentUserId)
             .getDocuments { [weak self] snapshot, error in
                 if let error = error {
                     self?.errorMessage.onNext("Failed to fetch chats: \(error.localizedDescription)")
-                    return
+                    return 
                 }
-
+                
                 guard let documents = snapshot?.documents else {
                     self?.errorMessage.onNext("No chats found.")
                     return
                 }
-
+                
                 var chatsArray: [ChatModel] = []
-                let group = DispatchGroup() 
-
+                let group = DispatchGroup()
+                
                 for document in documents {
                     let data = document.data()
                     let chatId = document.documentID
                     let participants = data["participants"] as? [String] ?? []
-
+                    
                     let otherUserId = participants.first { $0 != currentUserId } ?? "Unknown"
-
+                    
                     var chatName = "Unknown"
-
+                    
                     group.enter()
                     self?.db.collection("users").document(otherUserId).getDocument { userSnapshot, error in
                         if let userData = userSnapshot?.data(), let username = userData["username"] as? String {
                             chatName = username
                         }
-
+                        
                         group.leave()
                     }
-
+                    
                     let date: String
                     if let timestamp = data["date"] as? Timestamp {
                         let dateFormatter = DateFormatter()
@@ -66,7 +66,7 @@ class MainViewModel {
                     } else {
                         date = "Unknown"
                     }
-
+                
                     group.notify(queue: .main) {
                         let chat = ChatModel(
                             id: chatId,
