@@ -1,0 +1,6 @@
+framework module Pods_AppomartChatee {
+  umbrella header "Pods-AppomartChatee-umbrella.h"
+
+  export *
+  module * { export * }
+}
