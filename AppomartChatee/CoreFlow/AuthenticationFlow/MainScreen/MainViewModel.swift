@@ -29,7 +29,7 @@ class MainViewModel {
             .getDocuments { [weak self] snapshot, error in
                 if let error = error {
                     self?.errorMessage.onNext("Failed to fetch chats: \(error.localizedDescription)")
-                    return 
+                    return
                 }
                 
                 guard let documents = snapshot?.documents else {

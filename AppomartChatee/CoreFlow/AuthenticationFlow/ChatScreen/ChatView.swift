@@ -11,6 +11,8 @@ import SwiftUI
 
 class ChatView: UIView {
 
+    var messageInputViewBottomConstraint: Constraint?
+    
     lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.register(ChatMessageCell.self, forCellReuseIdentifier: ChatMessageCell.identifier)
@@ -65,6 +67,7 @@ class ChatView: UIView {
         messageInputView.snp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
             make.height.equalTo(90)
+            self.messageInputViewBottomConstraint = make.bottom.equalToSuperview().constraint
         }
         
         sendButton.snp.makeConstraints { make in
@@ -85,6 +88,11 @@ class ChatView: UIView {
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(messageInputView.snp.top)
         }
+    }
+    
+    override func safeAreaInsetsDidChange() {
+        super.safeAreaInsetsDidChange()
+        messageInputViewBottomConstraint?.update(inset: safeAreaInsets.bottom)
     }
 }
 
